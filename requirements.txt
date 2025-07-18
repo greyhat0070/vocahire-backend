@@ -9,3 +9,7 @@ openai
 langchain
 whisper
 langchain-openai
+torch
+torchaudio
+silero-vad
+python-multipart
