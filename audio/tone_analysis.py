@@ -1,42 +1,52 @@
-import wave
-import contextlib
-import webrtcvad
+# tone_analysis.py
 
-# 🎙️ Detect speaking vs silence chunks
-def detect_speech_segments(wav_path):
-    vad = webrtcvad.Vad(2)  # Aggressiveness level 2 (0–3)
+import torchaudio
+import torch
+import numpy as np
+import os
+import time
+from scipy.io import wavfile
 
-    with contextlib.closing(wave.open(wav_path, 'rb')) as wf:
-        sample_rate = wf.getframerate()
-        channels = wf.getnchannels()
-        width = wf.getsampwidth()
-        n_frames = wf.getnframes()
-        audio = wf.readframes(n_frames)
+# Load silero VAD model
+model, utils = torch.hub.load(repo_or_dir='snakers4/silero-vad', model='silero_vad', force_reload=True)
+(get_speech_timestamps, _, read_audio, _, _) = utils
 
-    if channels != 1 or width != 2 or sample_rate not in (8000, 16000, 32000, 48000):
-        raise ValueError("Only mono 16-bit PCM at 8k/16k/32k/48k supported")
 
-    frame_duration = 30  # ms
-    frame_size = int(sample_rate * frame_duration / 1000) * 2
-    segments = []
+def record_with_silero_vad():
+    import sounddevice as sd
+    import soundfile as sf
 
-    for i in range(0, len(audio), frame_size):
-        frame = audio[i:i + frame_size]
-        if len(frame) < frame_size:
-            break
-        is_speech = vad.is_speech(frame, sample_rate)
-        segments.append(is_speech)
+    RATE = 16000
+    DURATION = 10  # seconds
+    THRESHOLD = 0.7
 
-    return segments
+    print("🎙️ Recording with Silero VAD... Speak now.")
 
-# 🔎 Compute % of silence (hesitation score)
-def compute_hesitation_score(wav_path):
-    segments = detect_speech_segments(wav_path)
-    silence_chunks = segments.count(False)
-    total_chunks = len(segments)
-    
-    if total_chunks == 0:
-        return 0.0
+    audio = sd.rec(int(RATE * DURATION), samplerate=RATE, channels=1, dtype='int16')
+    sd.wait()
 
-    hesitation_score = round((silence_chunks / total_chunks) * 100, 2)
-    return hesitation_score
+    temp_wav = "temp/audio.wav"
+    sf.write(temp_wav, audio, RATE)
+
+    wav = read_audio(temp_wav, sampling_rate=RATE)
+    speech_timestamps = get_speech_timestamps(wav, model, sampling_rate=RATE)
+
+    if not speech_timestamps:
+        print("⚠️ No speech detected.")
+        return None
+
+    print("✅ Speech detected.")
+    return temp_wav
+
+
+def compute_hesitation_score(audio_path):
+    wav, sr = torchaudio.load(audio_path)
+    speech_timestamps = get_speech_timestamps(wav[0], model, sampling_rate=sr)
+
+    total = wav.shape[1] / sr
+    if not speech_timestamps:
+        return 100
+
+    speech_duration = sum([(t['end'] - t['start']) / sr for t in speech_timestamps])
+    hesitation = 100 - int((speech_duration / total) * 100)
+    return hesitation  
