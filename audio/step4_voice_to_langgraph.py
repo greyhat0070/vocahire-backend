@@ -13,17 +13,17 @@ if not os.path.exists(user_db_path):
     with open(user_db_path, "w") as f:
         json.dump({}, f)
 
-
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from agents.interview_agent import get_next_question, submit_answer
 from agents.feedback_engine import generate_feedback
-from audio.step2_vad_listener import record_with_vad
 from audio.stt_whisper_local import transcribe_audio
 from audio.tone_analysis import compute_hesitation_score
 from audio.tts_speaker import speak
 from resume.resume_parser import parse_resume
 
+# ✅ Replaced deprecated VAD listener
+from audio.tone_analysis import record_with_silero_vad as record_with_vad
 
 # 🎙️ Login / Register
 print("🎙️ Welcome to VOCAHIRE Interview Coach")
@@ -53,7 +53,6 @@ if action == "2":  # Register
     print("👋 Please login again to continue.")
     exit()
 
-
 elif action == "1":  # Login
     if username not in user_db:
         print(f"❌ Username '{username}' not found. Please register first.")
@@ -67,7 +66,6 @@ elif action == "1":  # Login
 else:
     print("❌ Invalid input.")
     exit()
-
 
 # 📄 Upload Resume
 resume_path = os.path.join(resume_dir, "Resume.pdf")
