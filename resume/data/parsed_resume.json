@@ -1,0 +1,35 @@
+{
+  "education": [
+    "Indian Institute of Technology, Patna",
+    "2023 \u2013 Present",
+    "B.Tech in Artificial Intelligence and Data Science",
+    "CPI: 8.84/10",
+    "Tirumala Junior College, Visakhapatnam",
+    "2021 \u2013 2023",
+    "Marks: 983 / 1000",
+    "Andhrapradesh Residential School, Bobbili",
+    "2015 \u2013 2021",
+    "Marks: 590 / 600"
+  ],
+  "skills": [
+    "Languages: C, C++, Python, MySQL",
+    "Developer Tools: Jupyter Notebook",
+    "Frameworks: Flask, Hugging Face Transformers",
+    "Cloud/Databases: MySQL, CSV handling"
+  ],
+  "projects": [
+    "Major Projects",
+    "AI Vision Hub (Web Platform for Visual Intelligence) Flask, Hugging Face",
+    "Developed a complete AI-powered website integrating tools like image captioning, object detection, emotion de-",
+    "tection, NSFW filtering, etc., using pre-trained Hugging Face models and deployed with Flask.",
+    "English to French Translator (From Scratch) Transformers, Python",
+    "Built a custom sequence-to-sequence translation model from scratch using a transformer architecture for English",
+    "to French translation without relying on pre-trained weights.",
+    "Two-pass Assembler (Assembler + Emulator) C/C++ Created an assembler that takes \u2018.asm\u2018 input and produces \u2018.log\u2018, \u2018.list\u2018, \u2018.obj\u2018 files along with a real-time emulator to validate and simulate instructions.",
+    "AI-Solving Game: Rise of the Undead Decision Trees A logic-based simulation game between Person vs AI and AI vs AI involving strategic decision making.",
+    "Indian Railway Ticket Reservation System Python Simulated a railway booking system with features like ticketing, schedule query, and basic PNR tracking.",
+    "Data Analysis on NERLDC Load Dataset ARIMA, Python Performed EDA and ARIMA modeling on regional dispatch data. Used visualizations and forecasting to derive insights.",
+    "Completed a virtual job simulation involving forensic data analysis. Created an interactive dashboard using",
+    "Tableau, and used Excel to classify financial data and draw actionable business insights. 1"
+  ]
+}

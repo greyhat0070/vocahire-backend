@@ -1,0 +1,11 @@
+langgraph
+langchain-community
+openai
+python-dotenv
+fastapi
+uvicorn
+python-multipart
+openai
+langchain
+whisper
+langchain-openai
